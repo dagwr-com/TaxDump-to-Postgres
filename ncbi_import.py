@@ -67,10 +67,10 @@ def create_tables(conn):
         cur.execute('''
             CREATE TABLE IF NOT EXISTS citations (
                 cit_id INT PRIMARY KEY,
-                cit_key VARCHAR(50),
+                cit_key TEXT,
                 pubmed_id INT,
                 medline_id INT,
-                url VARCHAR(255),
+                url TEXT,
                 text TEXT,
                 taxid_list TEXT
             )
@@ -79,10 +79,10 @@ def create_tables(conn):
         cur.execute('''
             CREATE TABLE IF NOT EXISTS images (
                 image_id INT PRIMARY KEY,
-                image_key VARCHAR(50),
-                url VARCHAR(255),
-                license VARCHAR(255),
-                attribution VARCHAR(255),
+                image_key VARCHAR(225),
+                url TEXT,
+                license TEXT,
+                attribution TEXT,
                 source VARCHAR(255),
                 properties TEXT,
                 taxid_list TEXT
@@ -93,11 +93,11 @@ def create_tables(conn):
 def import_nodes(conn, filepath):
     with conn.cursor() as cur, open(filepath) as f:
         for line in f:
-            fields = line.rstrip('\t|\n').split('\t|\t')
+            fields = line.rstrip('|\n').split('\t|\t')
             cur.execute('''
                 INSERT INTO nodes VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             ''', fields)
-            print(f"{fields}")
+            print(f"Inserted: {fields}")
         conn.commit()
 
 
@@ -108,7 +108,7 @@ def import_names(conn, filepath):
             cur.execute('''
                 INSERT INTO names VALUES (%s, %s, %s, %s)
             ''', fields)
-            print(f"{fields}")
+            print(f"Inserted: {fields}")
         conn.commit()
 
 
@@ -119,7 +119,7 @@ def import_divisions(conn, filepath):
             cur.execute('''
                 INSERT INTO divisions VALUES (%s, %s, %s, %s)
             ''', fields)
-            print(f"{fields}")
+            print(f"Inserted: {fields}")
         conn.commit()
 
 def import_gencodes(conn, filepath):
@@ -129,7 +129,7 @@ def import_gencodes(conn, filepath):
             cur.execute('''
                 INSERT INTO gencodes VALUES (%s, %s, %s, %s, %s)
             ''', fields)
-            print(f"{fields}")
+            print(f"Inserted: {fields}")
         conn.commit()
 
 def import_delnodes(conn, filepath):
@@ -139,7 +139,7 @@ def import_delnodes(conn, filepath):
             cur.execute('''
                 INSERT INTO delnodes VALUES (%s)
             ''', fields)
-            print(f"{fields}")
+            print(f"Inserted: {fields}")
         conn.commit()
 
 def import_merged_nodes(conn, filepath):
@@ -149,27 +149,28 @@ def import_merged_nodes(conn, filepath):
             cur.execute('''
                 INSERT INTO merged_nodes VALUES (%s, %s)
             ''', fields)
-            print(f"{fields}")
+            print(f"Inserted: {fields}")
         conn.commit()
 
 def import_citations(conn, filepath):
     with conn.cursor() as cur, open(filepath) as f:
         for line in f:
-            fields = line.rstrip('\t|\n').split('\t|\t')
+            fields = line.rstrip('|\n').split('\t|\t')
+            print(f"Trying: {fields}")
             cur.execute('''
                 INSERT INTO citations VALUES (%s, %s, %s, %s, %s, %s, %s)
             ''', fields)
-            print(f"{fields}")
+            print(f"Inserted: {fields}")
         conn.commit()
 
 def import_images(conn, filepath):
     with conn.cursor() as cur, open(filepath) as f:
         for line in f:
-            fields = line.rstrip('\t|\n').split('\t|\t')
+            fields = line.rstrip('\n').split('\t|\t')
             cur.execute('''
                 INSERT INTO images VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
             ''', fields)
-            print(f"{fields}")
+            print(f"Inserted: {fields}")
         conn.commit()
 
 def import_dump(conn, path, file_choice=None):
