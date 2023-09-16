@@ -3,8 +3,10 @@ FROM postgres:latest
 
 # Install Python3 and pip
 RUN apt-get update && \
-  apt-get install -y python3 python3-pip wget && \
-  pip3 install biopython
+  apt-get install -y python3 python3-pip python3-venv wget && \
+  python3 -m venv /opt/venv && \
+  . /opt/venv/bin/activate && \
+  pip install --no-cache-dir biopython
 
 # Download and set up the BioSQL schema
 RUN wget https://raw.githubusercontent.com/biosql/biosql/master/sql/biosqldb-pg.sql -O /docker-entrypoint-initdb.d/biosqldb-pg.sql
